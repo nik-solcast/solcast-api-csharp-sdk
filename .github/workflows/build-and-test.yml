@@ -29,9 +29,3 @@ jobs:
 
     - name: Run tests
       run: dotnet test
-
-    - name: Upload build results (if needed)
-      uses: actions/upload-artifact@v3
-      with:
-        name: build-artifact
-        path: ./docs
