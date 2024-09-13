@@ -19,6 +19,7 @@ A **C# SDK** to access the **Solcast API**, allowing you to retrieve solar radia
 
 ## Documentation
 
+- C# SDK documentation: https://nik-solcast.github.io/solcast-api-csharp-sdk/
 - Full API documentation available at: [Solcast API Docs](https://docs.solcast.com.au)
 - SDK documentation available in the `docs` directory.
 
