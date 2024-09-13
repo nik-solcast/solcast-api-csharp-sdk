@@ -55,13 +55,12 @@ Console.WriteLine(response);
 ```
 
 For more detailed documentation, visit the following pages:
-
-[Live Data](live.md)
-[Historic Data](historic.md)
-[Forecast Data](forecast.md)
-[TMY Data](tmy.md)
-[Grid Aggregations](aggregations.md)
-[PV Power Sites](pv_power_sites.md)
+- [Live Data](live.md)
+- [Historic Data](historic.md)
+- [Forecast Data](forecast.md)
+- [TMY Data](tmy.md)
+- [Grid Aggregations](aggregations.md)
+- [PV Power Sites](pv_power_sites.md)
 
 
 ## API Documentation
