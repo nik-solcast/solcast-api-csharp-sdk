@@ -1,4 +1,4 @@
-name: Build, Test and Deploy Docs
+name: Build and Test
 
 on:
   push:
@@ -30,16 +30,8 @@ jobs:
     - name: Run tests
       run: dotnet test
 
-  deploy-docs:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v4
+    - name: Upload build results (if needed)
+      uses: actions/upload-artifact@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
+        name: build-artifact
+        path: ./docs
