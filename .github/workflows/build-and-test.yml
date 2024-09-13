@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build, Test, and Deploy Docs
 
 on:
   push:
@@ -7,6 +7,12 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build-and-test:
@@ -34,3 +40,17 @@ jobs:
       uses: actions/upload-pages-artifact@v3
       with:
         path: ./docs
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download artifact for deployment
+      uses: actions/download-pages-artifact@v3
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
