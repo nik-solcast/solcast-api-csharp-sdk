@@ -1,0 +1,19 @@
+{
+    "name": "C# DevContainer",
+    "build": {
+      "dockerfile": "Dockerfile",
+      "context": "."
+    },
+    "customizations":{
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csharp",
+				"ms-dotnettools.csdevkit"
+            ]
+        },
+        "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+        }
+    },
+    "postCreateCommand": "dotnet restore"
+}

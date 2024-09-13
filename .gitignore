@@ -1,0 +1,5 @@
+# ignore object directory
+obj/
+bin/
+TestResults/
+.vscode/launch.json
