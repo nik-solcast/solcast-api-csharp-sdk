@@ -30,7 +30,14 @@ jobs:
     - name: Run tests
       run: dotnet test
 
-  deploy docs:
+  deploy-docs:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
