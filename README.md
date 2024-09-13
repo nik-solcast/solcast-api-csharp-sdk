@@ -2,6 +2,8 @@
 
 # Solcast API C# SDK
 
+<img src="https://github.com/nik-solcast/solcast-api-csharp-sdk/actions/workflows/tests.yml/badge.svg" alt="Tests">
+
 A **C# SDK** to access the **Solcast API**, allowing you to retrieve solar radiation, weather data, and forecasts from satellite and numerical models.
 
 ---
