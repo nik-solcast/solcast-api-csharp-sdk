@@ -29,3 +29,8 @@ jobs:
 
     - name: Run tests
       run: dotnet test
+
+    - name: Upload docs for deployment
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./docs
