@@ -2,18 +2,20 @@
     "name": "C# DevContainer",
     "build": {
       "dockerfile": "Dockerfile",
-      "context": "."
+      "context": ".."
     },
     "customizations":{
         "vscode": {
             "extensions": [
                 "ms-dotnettools.csharp",
-				"ms-dotnettools.csdevkit"
+				"ms-dotnettools.csdevkit",
+                "ms-dotnettools.dotnet-interactive-vscode"
             ]
         },
         "settings": {
         "terminal.integrated.shell.linux": "/bin/bash"
         }
     },
-    "postCreateCommand": "dotnet restore"
+    "postCreateCommand": "dotnet restore",
+    "runArgs": ["--env-file", "${localWorkspaceFolder}/.env"]
 }

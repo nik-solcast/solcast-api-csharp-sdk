@@ -24,7 +24,6 @@ A **C# SDK** to access the **Solcast API**, allowing you to retrieve solar radia
 
 - C# SDK documentation: https://nik-solcast.github.io/solcast-api-csharp-sdk/
 - Full API documentation available at: [Solcast API Docs](https://docs.solcast.com.au)
-- SDK documentation available in the `docs` directory.
 
 ---
 
@@ -66,7 +65,12 @@ export SOLCAST_API_KEY="{your_api_key}"
 using Solcast.Clients;
 
 var liveClient = new LiveClient();
-var response = await liveClient.GetRadiationAndWeather(-33.856784, 151.215297, new[] { "air_temp", "dni", "ghi" }, "csv");
+var response = await liveClient.GetRadiationAndWeather(
+    latitude: -33.856784,
+    longitude: 151.215297,
+    output_parameters: ["air_temp", "dni", "ghi"]
+    format: "csv"
+);
 
 Console.WriteLine(response);
 ```
@@ -76,9 +80,11 @@ Console.WriteLine(response);
 using Solcast.Clients;
 
 var forecastClient = new ForecastClient();
-var response = await forecastClient.GetForecast(-33.856784, 151.215297, new[] { "air_temp", "dni", "ghi" });
-
-Console.WriteLine(response);
+var response = await forecastClient.GetForecast(
+    latitude: -33.856784,
+    longitude: 151.215297,
+    output_parameters: ["air_temp", "dni", "ghi"]
+);
 ```
 
 ### Retrieving Historic Radiation and Weather Data
@@ -86,9 +92,12 @@ Console.WriteLine(response);
 using Solcast.Clients;
 
 var historicClient = new HistoricClient();
-var response = await historicClient.GetRadiationAndWeather(-33.856784, 151.215297, "2022-01-01T00:00", duration: "P1D");
-
-Console.WriteLine(response);
+var response = await historicClient.GetRadiationAndWeather(
+    latitude: -33.856784,
+    longitude: 151.215297,
+    start: "2022-01-01T00:00",
+    duration: "P1D"
+);
 ```
 
 ### Retrieving TMY Radiation and Weather Data
@@ -96,9 +105,10 @@ Console.WriteLine(response);
 using Solcast.Clients;
 
 var tmyClient = new TmyClient();
-var response = await tmyClient.GetRadiationAndWeather(-33.856784, 151.215297);
-
-Console.WriteLine(response);
+var response = await tmyClient.GetRadiationAndWeather(
+    latitude: -33.856784,
+    longitude: 151.215297,
+);
 ```
 
 ### Retrieving Grid Aggregation Forecast Data
@@ -106,9 +116,12 @@ Console.WriteLine(response);
 using Solcast.Clients;
 
 var aggregationClient = new AggregationClient();
-var response = await aggregationClient.GetForecastAggregation("country_total", "it_total", new[] { "percentage", "pv_estimate" }, "csv");
-
-Console.WriteLine(response);
+var response = await aggregationClient.GetForecastAggregation(
+    collectionId: "country_total",
+    aggregationId: "it_total",
+    outputParameters: ["percentage", "pv_estimate"],
+    format: "csv"
+);
 ```
 
 #### Listing all available PV Power Sites:
@@ -117,8 +130,6 @@ using Solcast.Clients;
 
 var pvClient = new PvPowerSitesClient();
 var response = await pvClient.ListPvPowerSites();
-
-Console.WriteLine(response);
 ```
 
 #### Getting metadata of a specific PV Power Site:
@@ -126,9 +137,7 @@ Console.WriteLine(response);
 using Solcast.Clients;
 
 var pvClient = new PvPowerSitesClient();
-var response = await pvClient.GetPvPowerSite("resource-id");
-
-Console.WriteLine(response);
+var response = await pvClient.GetPvPowerSite("ba75-e17a-7374-95ed");
 ```
 
 ## API Methods

@@ -1,6 +1,6 @@
-# Welcome to the Solcast C# SDK
+# Welcome to Solcast
 
-The **Solcast C# SDK** allows you to access the Solcast API to retrieve live and forecasted solar radiation and weather data. It provides simple client classes to interact with the API and retrieve data in an easy-to-use format.
+A simple C# SDK that wraps [Solcast's API](https://docs.solcast.com.au/).
 
 ## Install
 
@@ -10,57 +10,61 @@ To install the SDK, add the package to your project using the following command:
 dotnet add package Solcast
 ```
 
-Alternatively, you can clone the SDK and build it locally:
-
-```bash
-git clone https://github.com/Solcast/solcast-api-csharp-sdk.git
-cd solcast-api-csharp-sdk
-dotnet build
-```
-
 ## Usage
+!!! warning 
 
-To use the SDK, you need to set your Solcast API key as an environment variable:
+    To access Solcast data you will need a [commercial API key](https://toolkit.solcast.com.au/register). If you have the API key already, you can use it with this library either as an environment variable called SOLCAST_API_KEY, or you can pass it as an argument `api_key` when you call one of the library's methods. 
 
-```bash
-$env:SOLCAST_API_KEY = "{your_api_key}"
-```
-
-Example: Retrieving Live Radiation and Weather Data
+Fetching Live Radiation and Weather Data:
 ```csharp
 using Solcast.Clients;
 
 var liveClient = new LiveClient();
-var response = await liveClient.GetRadiationAndWeather(-33.856784, 151.215297, new[] { "air_temp", "dni", "ghi" });
-Console.WriteLine(response);
+var response = await liveClient.GetRadiationAndWeather(
+    latitude: -33.856784,
+    longitude: 151.215297,
+    output_parameteres: ["air_temp", "dni", "ghi" ]
+);
 ```
 
-Example: Retrieving Forecast Data
+!!! tip
+
+    When testing or developing, you should use `solcast.unmetered_locations` so that your usage isn't counted against your plan.
+
+[Unmetered Locations](https://docs.solcast.com.au/#unmetered-locations) still require you to signup for a commercial API key (above).
 ```csharp
 using Solcast.Clients;
 
-var forecastClient = new ForecastClient();
-var response = await forecastClient.GetForecast(-33.856784, 151.215297, new[] { "air_temp", "dni", "ghi" });
-Console.WriteLine(response);
+var location = UnmeteredLocations.Locations["Sydney Opera House"];
+
+var additionalParams = new Dictionary<string, string>
+{
+    { "period", "PT5M" },
+    { "capacity", "5" },
+    { "tilt", "22" }
+};
+
+var response = await forecastClient.GetForecastRooftopPvPower(
+    latitude: location.Latitude,
+    longitude: location.Longitude,
+    outputParameters: ["pv_power_rooftop"],
+    additionalParameters: additionalParams
+);
+
 ```
 
-Example: Retrieving Historic Radiation and Weather Data
-```csharp
-using Solcast.Clients;
 
-var historicClient = new HistoricClient();
-var response = await historicClient.GetRadiationAndWeather(-33.856784, 151.215297, "2022-01-01T00:00", duration: "P1D");
-
-Console.WriteLine(response);
-```
 
 For more detailed documentation, visit the following pages:
-- [Live Data](live.md)
-- [Historic Data](historic.md)
-- [Forecast Data](forecast.md)
-- [TMY Data](tmy.md)
-- [Grid Aggregations](aggregations.md)
-- [PV Power Sites](pv_power_sites.md)
+
+| Module           | API Docs                                 |
+|------------------|------------------------------------------|
+| `live`           | [Solcast.Clients.LiveClient](live.md) |
+| `historic`       | [Solcast.Clients.HistoricClient](historic.md) |
+| `forecast`       | [Solcast.Clients.ForecastClient](forecast.md) |
+| `tmy`            | [Solcast.Clients.TmyClient](tmy.md) |
+| `pv_power_sites` | [Solcast.Clients.PvPowerSitesClient](pv_power_sites.md) |
+| `aggregations`   | [Solcast.Clients.AggregationClient](aggregations.md) |
 
 
 ## API Documentation

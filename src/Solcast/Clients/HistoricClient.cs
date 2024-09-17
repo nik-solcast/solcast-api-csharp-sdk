@@ -17,7 +17,7 @@ namespace Solcast.Clients
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {Environment.GetEnvironmentVariable("SOLCAST_API_KEY")}");
         }
 
-        public async Task<string> GetRadiationAndWeather(double latitude, double longitude, string start, string format = "csv", string end = null, string duration = null)
+        public async Task<string> GetRadiationAndWeather(double latitude, double longitude, string start, string format = "csv", string end = null, string duration = null, string period = null)
         {
             if ((end == null && duration == null) || (end != null && duration != null))
             {
@@ -33,6 +33,10 @@ namespace Solcast.Clients
             else if (duration != null)
             {
                 parameters += $"&duration={duration}";
+            }
+            else if (period != null)
+            {
+                parameters += $"&period={period}";
             }
 
             var response = await _httpClient.GetAsync($"{SolcastUrls.HistoricRadiationAndWeather}?{parameters}");

@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Solcast.Models;
+using System.Linq;
 
 namespace Solcast.Clients
 {
@@ -45,9 +47,16 @@ namespace Solcast.Clients
         }
 
         // Method to get rooftop PV power forecasts
-        public async Task<object> GetForecastRooftopPvPower(double latitude, double longitude, string[] outputParameters, string format = "csv")
+        public async Task<object> GetForecastRooftopPvPower(double latitude, double longitude, string[] outputParameters, string format = "csv", Dictionary<string, string> additionalParameters = null)
         {
             var parameters = $"latitude={latitude}&longitude={longitude}&output_parameters={string.Join(",", outputParameters)}&format={format}";
+            
+            // Append additional parameters dynamically
+            if (additionalParameters != null)
+            {
+                parameters += "&" + string.Join("&", additionalParameters.Select(p => $"{p.Key}={p.Value}"));
+            }
+
             var response = await _httpClient.GetAsync($"{SolcastUrls.ForecastRooftopPvPower}?{parameters}");
 
             var content = await response.Content.ReadAsStringAsync();

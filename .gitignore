@@ -3,3 +3,4 @@ obj/
 bin/
 TestResults/
 .vscode/launch.json
+.env
