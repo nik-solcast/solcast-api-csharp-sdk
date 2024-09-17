@@ -37,4 +37,8 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
+      - run: curl -sSL https://install.python-poetry.org | python3 -
+      - run: ln -s /root/.local/bin/poetry /usr/local/bin/poetry
+      - run: poetry config virtualenvs.create false \
+      - run: poetry install --no-root --no-interaction --no-ansi --only=docs
       - run: mkdocs gh-deploy --force
