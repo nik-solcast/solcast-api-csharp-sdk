@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 
 namespace Solcast
@@ -69,7 +70,8 @@ namespace Solcast
                     Longitude = -89.8729,
                     ResourceId = "b787-cf17-e429-ef1d"
                 }
-            }
+            },
+
         };
 
         public static List<string> LoadTestLocationNames()

@@ -39,7 +39,7 @@ var response = await pvClient.GetPvPowerSite("ba75-e17a-7374-95ed");
 Console.WriteLine(response);
 ```
 
-##### Example Output (JSON):
+<!-- ##### Example Output (JSON):
 ```json
 {
     "resource_id": "ba75-e17a-7374-95ed",
@@ -85,4 +85,4 @@ Console.WriteLine(response);
     "pvrow_width": 2,
     "confirmed_metadata": "2024-07-30T11:52:28.9964540Z"
 }
-```
+``` -->

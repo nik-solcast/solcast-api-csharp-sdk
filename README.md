@@ -165,11 +165,33 @@ var response = await pvClient.GetPvPowerSite("ba75-e17a-7374-95ed");
 ## Contributing
 We welcome contributions to this SDK! If you'd like to contribute, please submit a Pull Request or open an issue with any suggestions or bug reports.
 
+To generate the sdk from the openapi specs run:
+```bash
+python3 generate_sdk_csharp.py
+```
+
 ## Running Tests
 To run the tests, use the following command:
 ```bash
-dotnet test
+dotnet build && dotnet test
 ```
+
+## Executing examples:
+Live:
+```bash
+dotnet run --project examples/Solcast.Examples/Solcast.Examples.csproj live
+```
+
+Historic:
+```bash
+dotnet run --project examples/Solcast.Examples/Solcast.Examples.csproj historic
+```
+
+Forecast:
+```bash
+dotnet run --project examples/Solcast.Examples/Solcast.Examples.csproj forecast
+```
+
 
 ---
 

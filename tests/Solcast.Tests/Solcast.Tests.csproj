@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\net8.0\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

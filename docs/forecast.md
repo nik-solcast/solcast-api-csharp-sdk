@@ -10,9 +10,26 @@ To retrieve forecast data, use the `ForecastClient` class.
 using Solcast.Clients;
 
 var forecastClient = new ForecastClient();
-var response = await forecastClient.GetForecast(-33.856784, 151.215297, new[] { "air_temp", "dni", "ghi" });
+
+var response = await forecastClient.GetRadiationAndWeather(
+    latitude: -33.856784,
+    longitude: 151.215297,
+    outputParameters: ["dni", "ghi", "air_temp"],
+    format: "csv"
+);
 
 Console.WriteLine(response);
+```
+
+### Example Response (CSV)
+```
+dni,ghi,air_temp,period_end,period
+193,372,20,2024-09-24T05:00:00Z,PT30M
+0,172,20,2024-09-24T05:30:00Z,PT30M
+145,246,20,2024-09-24T06:00:00Z,PT30M
+...
+0,143,12,2024-09-26T04:30:00Z,PT30M
+0,77,12,2024-09-26T05:00:00Z,PT30M
 ```
 
 ## API Parameters

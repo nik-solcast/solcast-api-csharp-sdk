@@ -18,14 +18,19 @@ namespace Solcast.Tests
         [Test]
         public async Task GetRadiationAndWeather_ShouldReturnValidData()
         {
-            var response = await _tmyClient.GetRadiationAndWeather(-33.856784, 151.215297);
+            var response = await _tmyClient.GetRadiationAndWeather(-33.856784, 151.215297, format: "json");
             Assert.IsNotNull(response);
         }
 
         [Test]
         public async Task GetRooftopPvPower_ShouldReturnValidData()
         {
-            var response = await _tmyClient.GetRooftopPvPower(-33.856784, 151.215297);
+            var response = await _tmyClient.GetRooftopPvPower(
+                latitude: -33.856784,
+                longitude: 151.215297,
+                capacity: 3,
+                format: "json"
+            );
             Assert.IsNotNull(response);
         }
     }

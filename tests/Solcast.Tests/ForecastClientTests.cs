@@ -2,6 +2,7 @@ using NUnit.Framework;
 using Solcast.Clients;
 using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 
 namespace Solcast.Tests
 {
@@ -41,10 +42,16 @@ namespace Solcast.Tests
             // Arrange
             double latitude = -33.856784;
             double longitude = 151.215297;
-            string[] outputParameters = { "dni", "ghi", "air_temp" };
+            List<string> outputParameters = ["dni", "ghi", "air_temp"];
+            string format = "json";
 
             // Act
-            var response = await _forecastClient.GetForecastRadiationAndWeather(latitude, longitude, outputParameters);
+            var response = await _forecastClient.GetRadiationAndWeather(
+                latitude: latitude,
+                longitude: longitude,
+                outputParameters: outputParameters,
+                format: format
+            );
 
             // Assert
             Assert.IsNotNull(response);
@@ -57,11 +64,20 @@ namespace Solcast.Tests
             // Arrange
             Environment.SetEnvironmentVariable("SOLCAST_API_KEY", null);
             _forecastClient = new ForecastClient();
+            double latitude = -33.856784;
+            double longitude = 151.215297;
+            List<string> outputParameters = ["dni", "ghi", "air_temp"];
+            string format = "json";
 
             // Act & Assert
             Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
             {
-                await _forecastClient.GetForecastRadiationAndWeather(-33.856784, 151.215297, new[] { "dni", "ghi" });
+                await _forecastClient.GetRadiationAndWeather(
+                    latitude: latitude,
+                    longitude: longitude,
+                    outputParameters: outputParameters,
+                    format: format
+                );
             });
         }
 

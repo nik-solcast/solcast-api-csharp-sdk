@@ -10,9 +10,25 @@ To retrieve live data, use the `LiveClient` class.
 using Solcast.Clients;
 
 var liveClient = new LiveClient();
-var response = await liveClient.GetRadiationAndWeather(-33.856784, 151.215297, new[] { "air_temp", "dni", "ghi" });
+var response = await liveClient.GetRadiationAndWeather(
+    latitude: -33.856784,
+    longitude: 151.215297, 
+    outputParameters: ["dni", "ghi", "air_temp"],
+    format: "csv"
+);
 
 Console.WriteLine(response);
+```
+
+### Example Output (CSV)
+```csv
+dni,ghi,air_temp,period_end,period
+193,372,20,2024-09-24T05:00:00Z,PT30M
+700,621,21,2024-09-24T04:30:00Z,PT30M
+748,694,21,2024-09-24T04:00:00Z,PT30M
+...
+786,485,23,2024-09-22T05:30:00Z,PT30M
+826,579,23,2024-09-22T05:00:00Z,PT30M
 ```
 
 ## API Parameters

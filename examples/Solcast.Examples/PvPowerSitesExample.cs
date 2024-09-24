@@ -8,11 +8,11 @@ namespace Solcast.Examples
         {
             try
             {
-                var pvPowerSitesClient = new PvPowerSitesClient();
-                var response = await pvPowerSitesClient.GetPvPowerSite("ba75-e17a-7374-95ed");
+                var pvPowerSiteClient = new PvPowerSiteClient();
+                var response = await pvPowerSiteClient.GetPvPowerSite("ba75-e17a-7374-95ed");
 
                 Console.WriteLine("PV Power Site Data:");
-                Console.WriteLine(response);
+                Console.WriteLine(response.RawResponse);
             }
             catch (Exception ex)
             {

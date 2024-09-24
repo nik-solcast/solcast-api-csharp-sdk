@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Solcast;
 using Solcast.Clients;
 using System;
 using System.Threading.Tasks;
@@ -43,9 +44,16 @@ namespace Solcast.Tests
             double longitude = 151.215297;
             string start = "2022-06-01T06:00";
             string duration = "P1D";
+            string format = "json";
 
             // Act
-            var response = await _historicClient.GetRadiationAndWeather(latitude, longitude, start, duration: duration);
+            var response = await _historicClient.GetRadiationAndWeather(
+                latitude: latitude,
+                longitude: longitude, 
+                start: start,
+                duration: duration,
+                format: format
+            );
 
             // Assert
             Assert.IsNotNull(response);
@@ -62,68 +70,113 @@ namespace Solcast.Tests
             // Act & Assert
             Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
             {
-                await _historicClient.GetRadiationAndWeather(-33.856784, 151.215297, "2022-06-01T06:00", duration: "P1D");
+                await _historicClient.GetRadiationAndWeather(
+                    latitude: -33.856784,
+                    longitude: 151.215297,
+                    start: "2022-06-01T06:00",
+                    duration: "P1D",
+                    format: "json"
+                );
             });
         }
 
-        // [Test]
-        // public async Task GetHistoricRooftopPvPower_ShouldReturnValidData()
-        // {
-        //     // Arrange
-        //     double latitude = -33.856784;
-        //     double longitude = 151.215297;
-        //     string start = "2022-06-01T06:00";
-        //     string duration = "P1D";
+        [Test]
+        public async Task GetHistoricRooftopPvPower_ShouldReturnValidData()
+        {
+            // Arrange
+            double latitude = -33.856784;
+            double longitude = 151.215297;
+            string start = "2022-06-01T06:00";
+            string duration = "P1D";
+            float capacity = 5;
+            string format = "json";
 
-        //     // Act
-        //     var response = await _historicClient.GetRooftopPvPower(latitude, longitude, start, duration: duration);
+            // Act
+            var response = await _historicClient.GetRooftopPvPower(
+                latitude: latitude,
+                longitude: longitude,
+                start: start,
+                duration: duration,
+                capacity: capacity,
+                format: format
+            );
 
-        //     // Assert
-        //     Assert.IsNotNull(response);
-        //     // Additional assertions based on response data structure
-        // }
+            // Assert
+            Assert.IsNotNull(response);
+            // Additional assertions based on response data structure
+        }
 
-        // [Test]
-        // public void GetHistoricRooftopPvPower_ShouldThrowException_WhenApiKeyIsMissing()
-        // {
-        //     // Arrange
-        //     Environment.SetEnvironmentVariable("SOLCAST_API_KEY", null);
+        [Test]
+        public void GetHistoricRooftopPvPower_ShouldThrowException_WhenApiKeyIsMissing()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("SOLCAST_API_KEY", null);
+            _historicClient = new HistoricClient();
+            double latitude = -33.856784;
+            double longitude = 151.215297;
+            string start = "2022-06-01T06:00";
+            string duration = "P1D";
+            float capacity = 5;
+            string format = "json";
 
-        //     // Act & Assert
-        //     Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-        //     {
-        //         await _historicClient.GetRooftopPvPower(-33.856784, 151.215297, "2022-06-01T06:00", duration: "P1D");
-        //     });
-        // }
+            // Act & Assert
+            Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+            {
+                await _historicClient.GetRooftopPvPower(
+                    latitude: latitude,
+                    longitude: longitude,
+                    start: start,
+                    duration: duration,
+                    capacity: capacity,
+                    format: format
+                );
+            });
+        }
 
-        // [Test]
-        // public async Task GetHistoricAdvancedPvPower_ShouldReturnValidData()
-        // {
-        //     // Arrange
-        //     int resourceId = 12345;  // Replace with a valid resource ID
-        //     string start = "2022-06-01T06:00";
-        //     string duration = "P1D";
+        [Test]
+        public async Task GetHistoricAdvancedPvPower_ShouldReturnValidData()
+        {
+            // Arrange
+            string resourceId = UnmeteredLocations.Locations["Sydney Opera House"].ResourceId;
+            string start = "2022-06-01T06:00";
+            string duration = "P1D";
+            string format = "json";
 
-        //     // Act
-        //     var response = await _historicClient.GetAdvancedPvPower(resourceId, start, duration: duration);
+            // Act
+            var response = await _historicClient.GetAdvancedPvPower(
+                resourceId: resourceId,
+                start: start,
+                duration: duration,
+                format: format
+            );
 
-        //     // Assert
-        //     Assert.IsNotNull(response);
-        //     // Additional assertions based on response data structure
-        // }
+            // Assert
+            Assert.IsNotNull(response);
+            // Additional assertions based on response data structure
+        }
 
-        // [Test]
-        // public void GetHistoricAdvancedPvPower_ShouldThrowException_WhenApiKeyIsMissing()
-        // {
-        //     // Arrange
-        //     Environment.SetEnvironmentVariable("SOLCAST_API_KEY", null);
+        [Test]
+        public void GetHistoricAdvancedPvPower_ShouldThrowException_WhenApiKeyIsMissing()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("SOLCAST_API_KEY", null);
+            _historicClient = new HistoricClient();
+            string resourceId = UnmeteredLocations.Locations["Sydney Opera House"].ResourceId;
+            string start = "2022-06-01T06:00";
+            string duration = "P1D";
+            string format = "json";
 
-        //     // Act & Assert
-        //     Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
-        //     {
-        //         await _historicClient.GetAdvancedPvPower(12345, "2022-06-01T06:00", duration: "P1D");
-        //     });
-        // }
+            // Act & Assert
+            Assert.ThrowsAsync<UnauthorizedAccessException>(async () =>
+            {
+                await _historicClient.GetAdvancedPvPower(
+                    resourceId: resourceId,
+                    start: start,
+                    duration: duration,
+                    format: format
+                );
+            });
+        }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()

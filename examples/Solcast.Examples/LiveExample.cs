@@ -11,10 +11,15 @@ namespace Solcast.Examples
             try
             {
                 var liveClient = new LiveClient();
-                var response = await liveClient.GetRadiationAndWeather(-33.856784, 151.215297, new[] { "dni", "ghi", "air_temp" }, "csv");
+                var response = await liveClient.GetRadiationAndWeather(
+                    latitude: -33.856784,
+                    longitude: 151.215297, 
+                    outputParameters: ["dni", "ghi", "air_temp"],
+                    format: "csv"
+                );
 
                 Console.WriteLine("Live Radiation and Weather Data (CSV):");
-                Console.WriteLine(response);
+                Console.WriteLine(response.RawResponse);
             }
             catch (Exception ex)
             {

@@ -9,6 +9,10 @@
     <Description>C# SDK to access the Solcast API</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/nik-solcast/solcast-api-csharp-sdk</RepositoryUrl>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
 
 

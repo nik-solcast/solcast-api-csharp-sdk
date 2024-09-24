@@ -37,22 +37,18 @@ using Solcast.Clients;
 
 var location = UnmeteredLocations.Locations["Sydney Opera House"];
 
-var additionalParams = new Dictionary<string, string>
-{
-    { "period", "PT5M" },
-    { "capacity", "5" },
-    { "tilt", "22" }
-};
+var forecastClient = new ForecastClient();
 
-var response = await forecastClient.GetForecastRooftopPvPower(
+var response = await forecastClient.GetRooftopPvPower(
     latitude: location.Latitude,
     longitude: location.Longitude,
     outputParameters: ["pv_power_rooftop"],
-    additionalParameters: additionalParams
+    period: "PT5M",
+    capacity: 5,
+    tilt: 22,
+    format: "csv"
 );
-
 ```
-
 
 
 For more detailed documentation, visit the following pages:

@@ -15,8 +15,12 @@ The `AggregationClient` has 2 available methods:
 using Solcast.Clients;
 
 var aggregationClient = new AggregationClient();
-var response = await aggregationClient.GetForecastAggregation(
-    "country_total", "it_total", new[] { "percentage", "pv_estimate" }, "csv");
+var response = await _aggregationClient.GetForecastAggregations(
+    collectionId: "country_total",
+    aggregationId: "it_total",
+    outputParameters: ["percentage", "pv_estimate"],
+    format: "csv"
+);
 
 Console.WriteLine(response);
 ```

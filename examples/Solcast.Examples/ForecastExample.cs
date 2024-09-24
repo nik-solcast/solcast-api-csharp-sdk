@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Solcast.Clients;
 
 namespace Solcast.Examples
@@ -11,10 +9,20 @@ namespace Solcast.Examples
             try
             {
                 var forecastClient = new ForecastClient();
-                var response = await forecastClient.GetForecastRadiationAndWeather(-33.856784, 151.215297, new[] { "dni", "ghi", "air_temp" }, "csv");
+                double latitude = -33.856784;
+                double longitude = 151.215297;
+                List<string> outputParameters = ["dni", "ghi", "air_temp"];
+                string format = "csv";
+
+                var response = await forecastClient.GetRadiationAndWeather(
+                    latitude: latitude,
+                    longitude: longitude,
+                    outputParameters: outputParameters,
+                    format: format
+                );
 
                 Console.WriteLine("Forecast Radiation and Weather Data (CSV):");
-                Console.WriteLine(response);
+                Console.WriteLine(response.RawResponse);
             }
             catch (Exception ex)
             {
