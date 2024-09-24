@@ -24,9 +24,9 @@
                 case "tmy":
                     await TmyExample.RunTmyExample();
                     break;
-                // case "aggregation":
-                //     await AggregationExample.RunAggregationExample();
-                //     break;
+                case "aggregation":
+                    await AggregationExample.RunAggregationExample();
+                    break;
                 case "pv_power_sites":
                     await PvPowerSitesExample.RunPvPowerSitesExample();
                     break;
