@@ -4,3 +4,4 @@ bin/
 TestResults/
 .vscode/launch.json
 .env
+venv
