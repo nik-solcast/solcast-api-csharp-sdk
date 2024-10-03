@@ -3,6 +3,7 @@ import os
 import re
 import requests
 import yaml
+import argparse
 
 
 def load_openapi_spec(path_or_url):
@@ -64,7 +65,7 @@ def get_endpoint_details(spec, endpoint, method):
             # Only handles the first content type for simplicity
             content = list(request_body['content'].values())[0]
             parameters = [{'name': 'body', 'in': 'body', 'schema': content['schema']}]
-    
+
     # Resolve references for parameters
     resolved_parameters = []
     for param in parameters:
@@ -251,7 +252,7 @@ def generate_csharp_method_with_usings(endpoint, method, parameters, spec, respo
 
         if param_type == "List<string>":
             required_usings.add("System.Collections.Generic")
-        
+
     # Complete the method signature
     method_signature += ",\n    ".join(param_list) + "\n        )"
 
@@ -366,7 +367,7 @@ namespace Solcast
 
         for constant_name, endpoint in endpoints.items():
             urls_code += f'        public static readonly string {constant_name} = "{endpoint}";\n'
-    
+
     urls_code += """
     }
 }
@@ -419,7 +420,7 @@ def generate_csharp_model_class(class_name, properties, required_properties, spe
         prop_required = prop_name in required_properties
         prop_code = f"    [JsonProperty(\"{prop_name}\")]\n    public {prop_type} {to_pascal_case(prop_name)} {{ get; set; }} {'// Required' if prop_required else ''}\n"
         class_code += prop_code
-    
+
     class_code += """
     [JsonExtensionData]
     public IDictionary<string, object> AdditionalData { get; set; } = new Dictionary<string, object>();
@@ -449,13 +450,13 @@ def generate_models(spec):
             spec
         )
         all_required_usings.update(required_usings)
-        
+
         # Classify as request or response based on naming convention (could be improved with additional logic)
         if "request" in definition_name.lower():
             models["requests"].append((class_code, required_usings))
         else:
             models["responses"].append((class_code, required_usings))
-    
+
     return models, all_required_usings
 
 
@@ -470,10 +471,10 @@ def save_model_class_to_file(class_code, required_usings, folder_path, file_name
     os.makedirs(folder_path, exist_ok=True)
     complete_class_code = generate_model_class_with_usings(class_code, required_usings)
     file_path = os.path.join(folder_path, file_name)
-    
+
     with open(file_path, 'w') as file:
         file.write(complete_class_code)
-    
+
     print(f"Saved generated code for {file_name} to {file_path}")
 
 
@@ -482,7 +483,7 @@ def get_response_type(spec, endpoint, method):
     paths = spec.get('paths', {})
     endpoint_info = paths.get(endpoint, {}).get(method, {})
     responses = endpoint_info.get('responses', {})
-    
+
     # Handle Swagger 2.0 and OpenAPI 3.0 response schemas
     response_schema = None
     if '200' in responses:
@@ -495,7 +496,7 @@ def get_response_type(spec, endpoint, method):
 
     if response_schema and '$ref' in response_schema:
         return response_schema['$ref'].split('/')[-1]
-    
+
     return None
 
 
@@ -516,7 +517,7 @@ def generate_client_class_with_methods(spec, endpoint_group):
         for http_method, method_info in path_info.items():
             if http_method not in ['get', 'post', 'put', 'delete', 'patch']:
                 continue
-            
+
             response_type = get_response_type(spec, endpoint, http_method)
             parameters = get_endpoint_details(spec, endpoint, http_method)
             method_code, required_usings = generate_csharp_method_with_usings(endpoint, http_method, parameters, spec, response_type)
@@ -563,7 +564,7 @@ namespace Solcast
             }},
 """
         class_code += location_code
-    
+
     # Close the dictionary and class definition
     class_code += """
         };
@@ -603,10 +604,10 @@ def save_class_to_file(class_code, folder_path, file_name):
     """Save the generated class to a file, creating the folder structure if necessary."""
     os.makedirs(folder_path, exist_ok=True)
     file_path = os.path.join(folder_path, file_name)
-    
+
     with open(file_path, 'w') as file:
         file.write(class_code)
-    
+
     print(f"Saved generated code for {file_name} to {file_path}")
 
 
@@ -632,11 +633,11 @@ def generate_aggregation_client_class(spec, endpoint_suffix='/aggregations'):
             context = 'live'
         elif 'forecast' in endpoint:
             context = 'forecast'
-        
+
         for http_method, method_info in path_info.items():
             if http_method not in ['get', 'post', 'put', 'delete', 'patch']:
                 continue
-            
+
             response_type = get_response_type(spec, endpoint, http_method)
             parameters = get_endpoint_details(spec, endpoint, http_method)
             method_code, required_usings = generate_csharp_method_with_usings(endpoint, http_method, parameters, spec, response_type, context)
@@ -652,39 +653,70 @@ def generate_aggregation_client_class(spec, endpoint_suffix='/aggregations'):
 
 
 if __name__ == "__main__":
-    # openapi_spec_path = 'openapi_v3.json'
+    # Setup argument parser
+    parser = argparse.ArgumentParser(description="Generate SDK classes from Solcast OpenAPI spec.")
+
+    # Add command-line arguments
+    parser.add_argument(
+        '--dev',
+        action='store_true',
+        help="Use the development OpenAPI spec (https://dev-api.solcast.com.au/openapi/v1/openapi.json)"
+    )
+    parser.add_argument(
+        '--path',
+        type=str,
+        help="Specify the path or URL to the OpenAPI spec"
+    )
+
+    # Parse arguments
+    args = parser.parse_args()
+
+    # Default OpenAPI spec path (production)
     openapi_spec_path = 'https://api.solcast.com.au/openapi/v1/openapi.json'
+
+    # Override if --dev is specified
+    if args.dev:
+        print("Using development OpenAPI spec...")
+        openapi_spec_path = 'https://dev-api.solcast.com.au/openapi/v1/openapi.json'
+
+    # Override if --path is provided
+    if args.path:
+        print(f"Using custom OpenAPI spec path: {args.path}")
+        openapi_spec_path = args.path
+
+    # Default unmetered locations file path
     json_file_path = 'unmetered_locations.json'
 
+    # Load the OpenAPI spec and unmetered locations
     spec = load_openapi_spec(openapi_spec_path)
     locations = load_unmetered_locations(json_file_path)
 
     # Define the endpoint groups and their corresponding client class names
     endpoint_groups = [
-        '/data/live/', 
+        '/data/live/',
         '/data/forecast/',
         '/data/historic/',
-        '/data/historic_forecast/',
+        # '/data/historic_forecast/',
         '/data/tmy/',
-        '/data/geographic/',
+        # '/data/geographic/',
         '/resources/pv_power_site',
     ]
-    
+
     # Generate and save UnmeteredLocations class
     unmetered_locations_code = generate_unmetered_locations_class(locations)
     save_class_to_file(unmetered_locations_code, os.path.join('src', 'Solcast', 'Utilities'), 'UnmeteredLocations.cs')
 
     # Extract endpoint details for SolcastUrls
     endpoint_details = extract_endpoints_from_spec(spec, endpoint_groups)
-    
+
     # Generate and save SolcastUrls class dynamically from spec
     solcast_urls_code = generate_solcast_urls_class_from_spec(endpoint_details)
     save_class_to_file(solcast_urls_code, os.path.join('src', 'Solcast', 'Utilities'), 'SolcastUrls.cs')
-    
+
     # Generate and save base client
     base_client_code = generate_base_client()
     save_class_to_file(base_client_code, os.path.join('src', 'Solcast', 'Clients'), 'BaseClient.cs')
-    
+
     # Generate and save the ApiResponse class
     api_response_code = generate_api_response_class()
     save_class_to_file(api_response_code, os.path.join('src', 'Solcast', 'Utilities'), 'ApiResponse.cs')
@@ -693,7 +725,7 @@ if __name__ == "__main__":
     for endpoint_group in endpoint_groups:
         client_class_code = generate_client_class_with_methods(spec, endpoint_group)
         save_class_to_file(client_class_code, os.path.join('src', 'Solcast', 'Clients'), f'{get_class_name_from_endpoint_group(endpoint_group)}.cs')
-    
+
     # Generate and save models
     models, all_required_usings = generate_models(spec)
     for model_type, classes in models.items():

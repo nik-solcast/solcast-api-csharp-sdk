@@ -23,17 +23,10 @@ namespace Solcast
         public static readonly string HistoricRadiationAndWeather = "data/historic/radiation_and_weather";
         public static readonly string HistoricRooftopPvPower = "data/historic/rooftop_pv_power";
 
-        // historic forecast data endpoints
-        public static readonly string HistoricForecastRadiationAndWeather = "data/historic_forecast/radiation_and_weather";
-        public static readonly string HistoricForecastRooftopPvPower = "data/historic_forecast/rooftop_pv_power";
-
         // tmy data endpoints
         public static readonly string TmyAdvancedPvPower = "data/tmy/advanced_pv_power";
         public static readonly string TmyRadiationAndWeather = "data/tmy/radiation_and_weather";
         public static readonly string TmyRooftopPvPower = "data/tmy/rooftop_pv_power";
-
-        // geographic data endpoints
-        public static readonly string GeographicHorizonAngle = "data/geographic/horizon_angle";
 
         // pv power site data endpoints
         public static readonly string PvPowerSites = "resources/pv_power_sites";
